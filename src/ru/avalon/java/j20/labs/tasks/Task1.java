@@ -1,9 +1,14 @@
 package ru.avalon.java.j20.labs.tasks;
 
+import java.io.ByteArrayOutputStream;
 import ru.avalon.java.j20.labs.Task;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Задание №1
@@ -54,7 +59,16 @@ public class Task1 implements Task {
      * @throws IOException в случае ошибок ввода-вывода.
      */
     private String read(File file) throws IOException {
-        throw new UnsupportedOperationException("Not implement yet!");
+        try(InputStream stream = new FileInputStream(file); //Try с ресурсами позволяет произвести автоматическое закрытие объекта
+                ByteArrayOutputStream memory = new ByteArrayOutputStream()){ //Сохраняет данные потока в виде массива байт в оперативной памяти
+            byte[] buffer = new byte[10];
+            int len;
+            while ((len = stream.read(buffer)) != -1){ //Чтение потока в буффер
+                memory.write(buffer, 0, len);
+            }
+            String result = memory.toString(); // Сохранение результата
+            return result;
+        }
     }
 
     /**
@@ -66,6 +80,10 @@ public class Task1 implements Task {
      * @throws IOException в случае ошибок ввода-вывода.
      */
     private void write(File file, String text) throws IOException {
-        throw new UnsupportedOperationException("Not implemented yet!");
+        try(OutputStream stream = new FileOutputStream(file)){
+            byte[] buffer = new byte[10];
+            buffer = text.getBytes(); // Переводит текст в байты и передает их в буфер
+            stream.write(buffer);
+        }
     }
 }
